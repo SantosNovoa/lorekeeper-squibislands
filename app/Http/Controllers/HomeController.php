@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery\GallerySubmission;
 use App\Models\SitePage;
+use App\Models\Species\Species;
+use App\Models\Character\Character;
+use App\Models\Character\CharacterImage;
 use App\Services\LinkService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
@@ -28,16 +32,55 @@ class HomeController extends Controller {
      */
     public function getIndex() {
         if (config('lorekeeper.extensions.show_all_recent_submissions.enable')) {
-            $query = GallerySubmission::visible(Auth::check() ? Auth::user() : null)->accepted()->orderBy('created_at', 'DESC');
+            $query = GallerySubmission::visible(Auth::user() ?? null)->accepted()->orderBy('created_at', 'DESC');
             $gallerySubmissions = $query->get()->take(8);
         } else {
             $gallerySubmissions = [];
         }
 
+        $featured = [];
+        $specieses = Species::visible(0)->orderBy('specieses.sort', 'DESC')->pluck('id')->toArray();
+
+        foreach ($specieses as $species) {
+            $randomSpecies = self::randomCharacter($species);
+            if ($randomSpecies) {
+                array_push($featured, $randomSpecies);
+            }
+        }
+
         return view('welcome', [
             'about'               => SitePage::where('key', 'about')->first(),
             'gallerySubmissions'  => $gallerySubmissions,
+            'featuredChars'       => $featured,
+            'featuredFirst'       => Arr::first($specieses),
         ]);
+    }
+
+    /**
+     * Gets random character from specified species.
+     *
+     * @param int (species_id) $species
+     */
+    public function randomCharacter(int $species) {
+        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(0)->where(function ($query) {
+            $query->where('is_gift_art_allowed', '>=', 1)
+                ->orWhere('is_gift_writing_allowed', '>=', 1);
+        });
+        $imageQuery = CharacterImage::images(Auth::user() ?? null)->with('features')->with('rarity')->with('species')->where('species_id', $species)->whereIn('id', $query->pluck('character_image_id')->toArray());
+
+        $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
+
+        if (!Auth::check() || !Auth::user()->hasPower('manage_characters')) {
+            $query->visible();
+        }
+
+        $allCharacters = $query->get();
+
+        if (!count($allCharacters)) {
+            return false;
+        }
+
+        return $allCharacters->random();
     }
 
     /**
