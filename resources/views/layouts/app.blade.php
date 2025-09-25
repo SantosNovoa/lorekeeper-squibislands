@@ -88,19 +88,15 @@
 
 <body>
     <div id="app">
-        <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');"></div>
-        @include('layouts._nav')
-        @if (View::hasSection('sidebar'))
-            <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
-        @endif
+        <div class="site-container">
+            <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');"></div>
+            @include('layouts._nav')
+            @if (View::hasSection('sidebar'))
+                <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
+            @endif
 
-        <main class="container-fluid">
-            <div class="row">
-
-                <div class="sidebar col-lg-2" id="sidebar">
-                    @yield('sidebar')
-                </div>
-                <div class="main-content col-lg-8 p-4">
+            <main class="container-fluid">
+                <div class="main-content p-4">
                     <div>
                         @if (Settings::get('is_maintenance_mode'))
                             <div class="alert alert-secondary">
@@ -126,76 +122,79 @@
                         @include('layouts._footer')
                     </div>
                 </div>
+
+            </main>
+
+            <div class="sidebar col-lg-2" id="sidebar">
+                @yield('sidebar')
             </div>
 
-        </main>
-
-
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title h5 mb-0"></span>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
+            <div class="modal fade" id="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title h5 mb-0"></span>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
                     </div>
                 </div>
             </div>
+
+            @yield('scripts')
+            @include('layouts._pagination_js')
+            <script>
+                $(document).on('focusin', function(e) {
+                    if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                        e.stopImmediatePropagation();
+                    }
+                });
+
+                $(function() {
+                    $('[data-toggle="tooltip"]').tooltip({
+                        html: true
+                    });
+                    $('.cp').colorpicker();
+                    tinymce.init({
+                        selector: '.wysiwyg',
+                        height: 500,
+                        menubar: false,
+                        convert_urls: false,
+                        plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen spoiler',
+                            'insertdatetime media table paste code help wordcount'
+                        ],
+                        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
+                        content_css: [
+                            '{{ asset('css/app.css') }}',
+                            '{{ asset('css/lorekeeper.css') }}'
+                        ],
+                        spoiler_caption: 'Toggle Spoiler',
+                        target_list: false
+                    });
+                    bsCustomFileInput.init();
+                    var $mobileMenuButton = $('#mobileMenuButton');
+                    var $sidebar = $('#sidebar');
+                    $('#mobileMenuButton').on('click', function(e) {
+                        e.preventDefault();
+                        $sidebar.toggleClass('active');
+                    });
+
+                    $('.inventory-log-stack').on('click', function(e) {
+                        e.preventDefault();
+                        loadModal("{{ url('items') }}/" + $(this).data('id') + "?read_only=1", $(this).data('name'));
+                    });
+
+                    $('.spoiler-text').hide();
+                    $('.spoiler-toggle').click(function() {
+                        $(this).next().toggle();
+                    });
+                });
+            </script>
+            @include('js._liveclock')
         </div>
-
-        @yield('scripts')
-        @include('layouts._pagination_js')
-        <script>
-            $(document).on('focusin', function(e) {
-                if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
-                    e.stopImmediatePropagation();
-                }
-            });
-
-            $(function() {
-                $('[data-toggle="tooltip"]').tooltip({
-                    html: true
-                });
-                $('.cp').colorpicker();
-                tinymce.init({
-                    selector: '.wysiwyg',
-                    height: 500,
-                    menubar: false,
-                    convert_urls: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview anchor',
-                        'searchreplace visualblocks code fullscreen spoiler',
-                        'insertdatetime media table paste code help wordcount'
-                    ],
-                    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
-                    content_css: [
-                        '{{ asset('css/app.css') }}',
-                        '{{ asset('css/lorekeeper.css') }}'
-                    ],
-                    spoiler_caption: 'Toggle Spoiler',
-                    target_list: false
-                });
-                bsCustomFileInput.init();
-                var $mobileMenuButton = $('#mobileMenuButton');
-                var $sidebar = $('#sidebar');
-                $('#mobileMenuButton').on('click', function(e) {
-                    e.preventDefault();
-                    $sidebar.toggleClass('active');
-                });
-
-                $('.inventory-log-stack').on('click', function(e) {
-                    e.preventDefault();
-                    loadModal("{{ url('items') }}/" + $(this).data('id') + "?read_only=1", $(this).data('name'));
-                });
-
-                $('.spoiler-text').hide();
-                $('.spoiler-toggle').click(function() {
-                    $(this).next().toggle();
-                });
-            });
-        </script>
-        @include('js._liveclock')
     </div>
 </body>
 

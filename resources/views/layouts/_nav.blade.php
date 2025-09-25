@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark" id="headerNav">
+<nav class="navbar navbar-expand-md" id="headerNav">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('lorekeeper.settings.site_name', 'Lorekeeper') }}
