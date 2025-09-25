@@ -170,7 +170,12 @@ main > .row {
 #headerNav {
      grid-area: 2 / 2 / 3 / 3;
      border-radius: 15px;
-     background-color: rgb(0, 174, 255);
+     background-color: rgb(43 67 145 / 80%);
+     color: rgb(238 231 232);
+}
+
+.nav-link {
+    color: rgb(238 231 232);
 }
 
 .navbar .navbar-brand,
@@ -207,7 +212,7 @@ main > .row {
     background-color: white;
     border-radius: 10px;
     margin-bottom: 1em;
-    padding: 0.4em 0;
+    padding: 0 0 0.4em 0;
 
     box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.1);
 }
@@ -215,12 +220,30 @@ main > .row {
 .sidebar .sidebar-header,
 .sidebar .sidebar-section .sidebar-section-header {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: DynaPuff, serif;
     font-weight: bold;
 }
 
+.sidebar-section-header {
+    background-color: rgb(99, 176, 209);
+    color: white; 
+    padding: 0.4em 1em; 
+    border-radius: 8px 8px 0 0; 
+    text-align: center;
+    font-size: 15px;
+}
+
+.sidebar-section {
+    border-top: none;
+}
+
+.sidebar-header {
+    text-align: center;
+    font-size: 15px;
+}
+
 .sidebar .sidebar-header {
-    background-color: #343a40;
+    background-color: rgb(43 67 145 / 80%);
 }
 .sidebar .sidebar-header a {
     color: white;
@@ -236,9 +259,9 @@ main > .row {
     padding: 0.1em 1em;
 }
 
-.sidebar a {
+.sidebar-item {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: Nunito, serif;
     color: rgba(0, 0, 0, 0.4);
 }
 .sidebar a:hover {
@@ -873,15 +896,16 @@ tr.accountbound {
 
 /* Subtle bounce animation for logo *********************************************************/
 @keyframes bounce {
-    70% { transform:translateY(0%); }
-    80% { transform:translateY(-15%); }
-    90% { transform:translateY(0%); }
-    95% { transform:translateY(-7%); }
-    97% { transform:translateY(0%); }
-    99% { transform:translateY(-3%); }
-    100% { transform:translateY(0); }
+    70% { transform: translateY(0) scale(1, 1); }
+    80% { transform: translateY(-15%) scale(1.05, 0.95); } 
+    90% { transform: translateY(0) scale(0.95, 1.05); }  
+    95% { transform: translateY(-7%) scale(1.02, 0.98); } 
+    97% { transform: translateY(0) scale(0.98, 1.02); }
+    99% { transform: translateY(-3%) scale(1.01, 0.99); }
+    100% { transform: translateY(0) scale(1, 1); }
 }
 
 #header #logo {
-    animation: bounce 11s ease-in-out infinite;
+    animation: bounce 6s ease-in-out infinite; 
+    transform-origin: center bottom; 
 }

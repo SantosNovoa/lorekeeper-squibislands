@@ -50,10 +50,6 @@
                         <div class="col-lg-8 col-7 pl-1">{!! $image->subtype_id ? $image->subtype->displayName : 'None' !!}</div>
                     </div>
                 @endif
-<<<<<<< HEAD
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-5">
-=======
                 @if ($image->character->homeSetting)
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-4">
@@ -72,7 +68,6 @@
                 @endif
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-4">
->>>>>>> preimpression/v3/world-expansion
                         <h5>Rarity</h5>
                     </div>
                     <div class="col-lg-8 col-7 pl-1">{!! $image->rarity_id ? $image->rarity->displayName : 'None' !!}</div>
