@@ -89,12 +89,13 @@
 <body>
     <div id="app">
         <div class="site-container">
-            <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');"></div>
+            <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');">
+                <a href="{{ url('/') }}"><img id="logo" src="{{ asset('images/logo.png') }}"></a>
+            </div>
             @include('layouts._nav')
             @if (View::hasSection('sidebar'))
                 <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
             @endif
-
             <main class="container-fluid">
                 <div class="main-content p-4">
                     <div>
@@ -117,17 +118,17 @@
                         @include('flash::message')
                         @yield('content')
                     </div>
-
-                    <div class="site-footer mt-4" id="footer">
-                        @include('layouts._footer')
-                    </div>
                 </div>
 
             </main>
 
+            <div class="site-footer" id="footer">
+                @include('layouts._footer')
+            </div>
             <div class="sidebar col-lg-2" id="sidebar">
                 @yield('sidebar')
             </div>
+
 
             <div class="modal fade" id="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">

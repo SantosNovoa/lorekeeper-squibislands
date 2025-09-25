@@ -12,7 +12,14 @@
     font-family: Lato;
     src: url(../webfonts/Lato-Regular.ttf);
 }
-
+@font-face {
+    font-family: DynaPuff;
+    src: url(../webfonts/DynaPuff-VariableFont_wdth\,wght.ttf);
+}
+@font-face {
+    font-family: CherryBombOne;
+    src: url(../webfonts/CherryBombOne-Regular.ttf)
+}
 /**************************************************************************************************
 
     Base styles
@@ -32,7 +39,7 @@ h6,
 .h5,
 .h6 {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: DynaPuff, serif;
     font-weight: bold;
 }
 
@@ -131,7 +138,7 @@ main {
     align-items: center;
     flex-direction: column;
     word-wrap: break-word;
-    grid-area: 3 / 2 / 6 / 3;
+    grid-area: 3 / 2 / 5 / 3;
     background: rgba(148, 250, 250, 0.4);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
@@ -157,18 +164,30 @@ main > .row {
     background-repeat: repeat;
     min-height: 200px;
     grid-area: 1 / 2 / 2 / 3;   
+    text-align: center;
 }
 
 #headerNav {
      grid-area: 2 / 2 / 3 / 3;
      border-radius: 15px;
-     background-color: rgb(0, 174, 255);
+     background-color: rgb(43 67 145 / 80%);
+     color: rgb(238 231 232);
+}
+
+.nav-link {
+    color: rgb(238 231 232);
 }
 
 .navbar .navbar-brand,
 .navbar .nav-item {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: CherryBombOne, serif;
+}
+
+#clockContainer {
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .navbar .row {
@@ -186,14 +205,14 @@ main > .row {
 .sidebar ul {
     list-style-type: none;
     display: inline-block;
-    margin-left: 120px;
+    width: 300px;
 }
 
 .sidebar ul li {
     background-color: white;
     border-radius: 10px;
     margin-bottom: 1em;
-    padding: 0.4em 0;
+    padding: 0 0 0.4em 0;
 
     box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.1);
 }
@@ -201,12 +220,30 @@ main > .row {
 .sidebar .sidebar-header,
 .sidebar .sidebar-section .sidebar-section-header {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: DynaPuff, serif;
     font-weight: bold;
 }
 
+.sidebar-section-header {
+    background-color: rgb(99, 176, 209);
+    color: white; 
+    padding: 0.4em 1em; 
+    border-radius: 8px 8px 0 0; 
+    text-align: center;
+    font-size: 15px;
+}
+
+.sidebar-section {
+    border-top: none;
+}
+
+.sidebar-header {
+    text-align: center;
+    font-size: 15px;
+}
+
 .sidebar .sidebar-header {
-    background-color: #343a40;
+    background-color: rgb(43 67 145 / 80%);
 }
 .sidebar .sidebar-header a {
     color: white;
@@ -222,9 +259,9 @@ main > .row {
     padding: 0.1em 1em;
 }
 
-.sidebar a {
+.sidebar-item {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: Nunito, serif;
     color: rgba(0, 0, 0, 0.4);
 }
 .sidebar a:hover {
@@ -266,6 +303,11 @@ main > .row {
     .site-header-image {
         display: none;
     }
+
+    .site-header-image #logo {
+        display: none;
+    }
+
     .site-mobile-header {
         display: block;
         position: fixed;
@@ -345,6 +387,7 @@ main > .row {
 
 .site-footer {
     text-align: center;
+    grid-area: 5 / 2 / 6 / 3;
 }
 
 .site-footer .navbar {
@@ -841,4 +884,28 @@ tr.accountbound {
     .comment_replies {
         padding-left: 1rem;
     }
+}
+
+/* Logo *************************************************************************************/
+
+#logo {
+    max-height: 200px;
+    margin: 1%;
+    max-width: 90%;
+}
+
+/* Subtle bounce animation for logo *********************************************************/
+@keyframes bounce {
+    70% { transform: translateY(0) scale(1, 1); }
+    80% { transform: translateY(-15%) scale(1.05, 0.95); } 
+    90% { transform: translateY(0) scale(0.95, 1.05); }  
+    95% { transform: translateY(-7%) scale(1.02, 0.98); } 
+    97% { transform: translateY(0) scale(0.98, 1.02); }
+    99% { transform: translateY(-3%) scale(1.01, 0.99); }
+    100% { transform: translateY(0) scale(1, 1); }
+}
+
+#header #logo {
+    animation: bounce 6s ease-in-out infinite; 
+    transform-origin: center bottom; 
 }
