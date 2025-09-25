@@ -62,4 +62,9 @@ return [
         'description' => 'Thumbnail used for gallery submissions with a set content warning. PNG format, size of masterlist thumbnails.',
         'filename'    => 'content_warning.png',
     ],
+    'logo'          => [
+        'name'        => 'Logo',
+        'description' => 'Logo image that will display on top of the banner. Scales to fit the screen resolution.',
+        'filename'    => 'logo.png',
+    ],
 ];
