@@ -64,6 +64,7 @@
 
     {{-- Font Awesome --}}
     <link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
 
     {{-- jQuery UI --}}
     <link href="{{ asset('css/jquery-ui.min.css') }}" rel="stylesheet">

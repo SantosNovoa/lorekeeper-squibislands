@@ -20,7 +20,7 @@ return [
     */
 
     // Navbar News Notif - Juni
-    'navbar_news_notif' => 0,
+    'navbar_news_notif' => 1,
 
     // Species Trait Index - Mercury
     'species_trait_index' => [
@@ -29,10 +29,10 @@ return [
     ],
 
     // Character Status Badges - Juni
-    'character_status_badges' => 0,
+    'character_status_badges' => 1,
 
     // Character TH Profile Link - Juni
-    'character_TH_profile_link' => 0,
+    'character_TH_profile_link' => 1,
 
     // Design Update Voting - Mercury
     'design_update_voting' => 0,
@@ -52,7 +52,7 @@ return [
     'traits_by_category' => 0,
 
     // Scroll To Top - Uri
-    'scroll_to_top' => 0, // 1 - On, 0 - off
+    'scroll_to_top' => 1, // 1 - On, 0 - off
 
     // Character Reward Expansion - Uri
     'character_reward_expansion' => [
@@ -70,7 +70,7 @@ return [
 
     // Staff Rewards - Mercury
     'staff_rewards' => [
-        'enabled'     => 0,
+        'enabled'     => 1,
         'currency_id' => 1,
     ],
 
@@ -85,16 +85,16 @@ return [
     ],
 
     // Aliases on Userpage - Speedy
-    'aliases_on_userpage' => 0, // By default, does not display the aliases on userpage. Enable to add a small arrow to display these underneath the primary alias.
+    'aliases_on_userpage' => 1, // By default, does not display the aliases on userpage. Enable to add a small arrow to display these underneath the primary alias.
 
     // Show All Recent Submissions - Speedy
     'show_all_recent_submissions' => [
         'enable' => 0,
         'links'  => [
-            'sidebar'      => 1,      // By default, ON, and will display in the sidebar.
-            'indexbutton'  => 1, // By default, ON, and will display a button on the index.
+            'sidebar'      => 0,      // By default, ON, and will display in the sidebar.
+            'indexbutton'  => 0, // By default, ON, and will display a button on the index.
         ],
-        'section_on_front' => 0, // By default, does not display on the front page. Enable to add a block above the footer.
+        'section_on_front' => 1, // By default, does not display on the front page. Enable to add a block above the footer.
     ],
 
     // collapsible admin sidebar - Newt
