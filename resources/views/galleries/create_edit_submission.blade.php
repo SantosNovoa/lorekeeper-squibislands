@@ -96,6 +96,17 @@
                     {!! $submission->prompt_id ? '<p><strong>Prompt:</strong> ' . $submission->prompt->displayName . '</p>' : '' !!}
                 @endif
 
+                @if ($gallery->location_selection == 1 && (!$submission->id || Auth::user()->hasPower('manage_submissions')))
+                    <div class="form-group">
+                        {!! Form::label('location_id', ($submission->id && Auth::user()->hasPower('manage_submissions') ? '[Admin] ' : '') . 'Location (Optional)') !!} {!! add_help(
+                            'This <strong>does not</strong> automatically submit to the selected location, and you will need to submit to it separately. The location selected here will be displayed on the submission page for future reference. You will not be able to edit this after creating the submission.',
+                        ) !!}
+                        {!! Form::select('location_id', $locations, $submission->location_id, ['class' => 'form-control selectize', 'id' => 'location', 'placeholder' => 'Select a Location']) !!}
+                    </div>
+                @else
+                    {!! $submission->location_id ? '<p><strong>Location:</strong> ' . $submission->location->displayName . '</p>' : '' !!}
+                @endif
+
                 @if ($submission->id && Auth::user()->hasPower('manage_submissions'))
                     <div class="form-group">
                         {!! Form::label('gallery_id', '[Admin] Gallery / Move Submission') !!} {!! add_help(

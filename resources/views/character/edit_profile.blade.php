@@ -9,6 +9,7 @@
 @endsection
 
 @section('profile-content')
+
     @if ($character->is_myo_slot)
         {!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Editing Profile' => $character->url . '/profile/edit']) !!}
     @else
@@ -40,6 +41,32 @@
             </div>
         @endif
     @endif
+
+    @if (!$character->is_myo_slot && ($char_enabled == 2 || (Auth::user()->isStaff && $char_enabled == 3)))
+        @if (Auth::user()->isStaff && $char_enabled == 3)
+            <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character locations freely.</div>
+        @endif
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label">Location</label>
+            <div class="col-md">
+                {!! Form::select('location', [0 => 'Choose a Location'] + $locations, isset($character->home_id) ? $character->home_id : 0, ['class' => 'form-control selectize']) !!}
+            </div>
+        </div>
+    @endif
+
+    @if (!$character->is_myo_slot && ($char_faction_enabled == 2 || (Auth::user()->isStaff && $char_faction_enabled == 3)))
+        @if (Auth::user()->isStaff && $char_faction_enabled == 3)
+            <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character factions freely.</div>
+        @endif
+        <p>Please note that changing this character's faction will remove them from any special ranks and reset their faction standing!</p>
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label">Faction</label>
+            <div class="col-md">
+                {!! Form::select('faction', [0 => 'Choose a Faction'] + $factions, isset($character->faction_id) ? $character->faction_id : 0, ['class' => 'form-control selectize']) !!}
+            </div>
+        </div>
+    @endif
+
     <div class="form-group">
         {!! Form::label('text', 'Profile Content') !!}
         {!! Form::textarea('text', $character->profile->text, ['class' => 'wysiwyg form-control']) !!}

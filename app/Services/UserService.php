@@ -13,6 +13,9 @@ use App\Models\Submission\Submission;
 use App\Models\Trade;
 use App\Models\User\User;
 use App\Models\User\UserUpdateLog;
+use App\Models\WorldExpansion\Faction;
+use App\Models\WorldExpansion\FactionRankMember;
+use App\Models\WorldExpansion\Location;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -36,7 +39,7 @@ class UserService extends Service {
      *
      * @param array $data
      *
-     * @return \App\Models\User\User
+     * @return User
      */
     public function createUser($data) {
         // If the rank is not given, create a user with the lowest existing rank.
@@ -111,7 +114,7 @@ class UserService extends Service {
      *
      * @param array $data
      *
-     * @return \App\Models\User\User
+     * @return User
      */
     public function updateUser($data) {
         $user = User::find($data['id']);
@@ -126,10 +129,104 @@ class UserService extends Service {
     }
 
     /**
+     * Updates a user. Used in modifying the admin user on the command line.
+     *
+     * @param mixed $id
+     * @param mixed $user
+     *
+     * @return User
+     */
+    public function updateLocation($id, $user) {
+        DB::beginTransaction();
+
+        try {
+            $location = Location::find($id);
+            if (!$location) {
+                throw new \Exception('Not a valid location.');
+            }
+            if (!$location->is_user_home) {
+                throw new \Exception('Not a location a user can have as their home.');
+            }
+
+            $limit = Settings::get('WE_change_timelimit');
+
+            if ($user->canChangeLocation) {
+                $user->home_id = $id;
+                $user->home_changed = Carbon::now();
+                $user->save();
+            } else {
+                throw new \Exception("You can't change your location yet!");
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Updates a user. Used in modifying the admin user on the command line.
+     *
+     * @param mixed $id
+     * @param mixed $user
+     *
+     * @return User
+     */
+    public function updateFaction($id, $user) {
+        DB::beginTransaction();
+
+        try {
+            if ($user->faction) {
+                $old = $user->faction;
+            }
+            $faction = Faction::find($id);
+            if ($id == 0) {
+                $id = null;
+            } elseif (!$faction) {
+                throw new \Exception('Not a valid faction.');
+            } elseif (!$faction->is_user_faction) {
+                throw new \Exception('Not a faction a user can join.');
+            }
+
+            $limit = Settings::get('WE_change_timelimit');
+
+            if ($user->canChangeFaction) {
+                $user->faction_id = $id;
+                $user->faction_changed = Carbon::now();
+                $user->save();
+            } else {
+                throw new \Exception("You can't change your faction yet!");
+            }
+
+            // Reset standing/remove from closed rank
+            if (($id == null) || (isset($old) && $faction->id != $old->id)) {
+                $standing = $user->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+                if ($standing && $standing->quantity > 0) {
+                    if (!$debit = (new CurrencyManager)->debitCurrency($user, null, 'Changed Factions', null, $standing, $standing->quantity)) {
+                        throw new \Exception('Failed to reset standing.');
+                    }
+                }
+
+                if (FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()) {
+                    FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()->delete();
+                }
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Updates the user's password.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param User  $user
      *
      * @return bool
      */
@@ -158,8 +255,8 @@ class UserService extends Service {
     /**
      * Updates the user's email and resends a verification email.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
+     * @param array $data
+     * @param User  $user
      *
      * @return bool
      */
@@ -277,8 +374,8 @@ class UserService extends Service {
     /**
      * Updates the user's avatar.
      *
-     * @param \App\Models\User\User $user
-     * @param mixed                 $avatar
+     * @param User  $user
+     * @param mixed $avatar
      *
      * @return bool
      */
@@ -327,8 +424,8 @@ class UserService extends Service {
     /**
      * Updates a user's username.
      *
-     * @param string                $username
-     * @param \App\Models\User\User $user
+     * @param string $username
+     * @param User   $user
      *
      * @return bool
      */
@@ -388,9 +485,9 @@ class UserService extends Service {
     /**
      * Bans a user.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
+     * @param array $data
+     * @param User  $user
+     * @param User  $staff
      *
      * @return bool
      */
@@ -476,8 +573,8 @@ class UserService extends Service {
     /**
      * Unbans a user.
      *
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
+     * @param User $user
+     * @param User $staff
      *
      * @return bool
      */
@@ -510,9 +607,9 @@ class UserService extends Service {
     /**
      * Deactivates a user.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
+     * @param array $data
+     * @param User  $user
+     * @param User  $staff
      *
      * @return bool
      */
@@ -606,8 +703,8 @@ class UserService extends Service {
     /**
      * Reactivates a user account.
      *
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
+     * @param User $user
+     * @param User $staff
      *
      * @return bool
      */

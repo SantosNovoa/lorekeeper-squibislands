@@ -15,6 +15,7 @@ class Gallery extends Model {
         'id', 'parent_id', 'name', 'sort', 'description',
         'currency_enabled', 'votes_required', 'submissions_open',
         'start_at', 'end_at', 'hide_before_start', 'prompt_selection',
+        'location_selection',
     ];
 
     /**

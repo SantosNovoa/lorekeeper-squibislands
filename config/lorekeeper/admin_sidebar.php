@@ -196,6 +196,43 @@ return [
             ],
         ],
     ],
+    'WorldExpansion' => [
+        'power' => 'manage_world',
+        'links' => [
+            [
+                'name' => 'Concepts',
+                'url'  => 'admin/world/concepts',
+            ],
+            [
+                'name' => 'Fauna',
+                'url'  => 'admin/world/faunas',
+            ],
+            [
+                'name' => 'Flora',
+                'url'  => 'admin/world/floras',
+            ],
+            [
+                'name' => ' Events',
+                'url'  => 'admin/world/events',
+            ],
+            [
+                'name' => ' Figures',
+                'url'  => 'admin/world/figures',
+            ],
+            [
+                'name' => 'Factions',
+                'url'  => 'admin/world/factions',
+            ],
+            [
+                'name' => 'Glossary',
+                'url'  => 'admin/world/glossary',
+            ],
+            [
+                'name' => 'Locations',
+                'url'  => 'admin/world/locations',
+            ],
+        ],
+    ],
     'Raffles'    => [
         'power' => 'manage_raffles',
         'links' => [

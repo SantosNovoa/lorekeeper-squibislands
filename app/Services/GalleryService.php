@@ -43,6 +43,9 @@ class GalleryService extends Service {
             if (!isset($data['prompt_selection'])) {
                 $data['prompt_selection'] = 0;
             }
+            if (!isset($data['location_selection'])) {
+                $data['location_selection'] = 0;
+            }
 
             $gallery = Gallery::create($data);
 
@@ -90,6 +93,9 @@ class GalleryService extends Service {
             }
             if (!isset($data['prompt_selection'])) {
                 $data['prompt_selection'] = 0;
+            }
+            if (!isset($data['location_selection'])) {
+                $data['location_selection'] = 0;
             }
 
             if (!$this->logAdminAction($user, 'Updated Gallery', 'Updated '.$gallery->displayName)) {
